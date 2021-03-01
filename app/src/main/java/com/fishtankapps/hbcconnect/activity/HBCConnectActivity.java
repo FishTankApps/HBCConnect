@@ -44,9 +44,6 @@ public class HBCConnectActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setUpServer(false);
-        setUpServerPinger();
-
         dataFile = DataFile.openDataFile(this);
 
         hbcConnectActivity = this;
@@ -98,91 +95,10 @@ public class HBCConnectActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-
     private boolean onThreeButtonsMenuItemClicked(MenuItem menuItem){
 
 
         return true;
-    }
-
-    private boolean firstTry = true;
-    private void setUpServer(boolean previouslyFailed){
-        if(hbcConnectServer != null && hbcConnectServer.isConnected())
-            return;
-
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w("Firebase", "Fetching FCM registration token failed", task.getException());
-                            return;
-                        }
-
-                        // Get new FCM registration token
-                        String token = task.getResult();
-
-
-                        Log.d("Firebase", token);
-                        Toast.makeText(HBCConnectActivity.this, token, Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        if(!Utilities.isInternetAvailable()){
-            Toast.makeText(this, "Unable to connect to server - No internet connection", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        new Thread(()->{
-            boolean successful;
-            int numberOfAttempts = 0;
-
-            do{
-                hbcConnectServer = new HBCConnectServer();
-                successful = hbcConnectServer.connect();
-
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                numberOfAttempts++;
-
-                if(numberOfAttempts > 5){
-                    break;
-                }
-            }while(!successful && !firstTry);
-
-            firstTry = false;
-
-            if(!successful){
-                Snackbar snackbar = Snackbar.make(findViewById(R.id.nav_view), "Unable to Connect to server", Snackbar.LENGTH_LONG);
-
-                snackbar.setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
-                snackbar.setAction("Retry", l->setUpServer(true));
-
-                snackbar.show();
-            } else {
-                if (previouslyFailed) {
-                    Snackbar snackbar = Snackbar.make(findViewById(R.id.nav_view), "Connected to Server!", Snackbar.LENGTH_LONG);
-
-                    snackbar.setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
-                    snackbar.show();
-                }
-
-                readInitialServerData();
-            }
-
-        }).start();
-    }
-
-    private void setUpServerPinger(){
-        Intent intent = new Intent(this, ServerNotificationPinger.class);
-        PendingIntent sender = PendingIntent.getBroadcast(this, 0, intent, 0);
-
-        AlarmManager am = (AlarmManager) this.getSystemService(ALARM_SERVICE);
-        am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,  SystemClock.elapsedRealtime() + 1000, Constants.SERVER_PING_MILLIS, sender);// 10min interval
     }
 
     private void readInitialServerData(){

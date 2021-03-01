@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.fishtankapps.hbcconnect.server.HBCConnectServer;
 import com.fishtankapps.hbcconnect.utilities.Constants;
 
 import org.jetbrains.annotations.NotNull;
@@ -48,30 +47,6 @@ public class DataFile implements Serializable {
 
     public void addSubmittedCountMeInCards(SubmittedCountMeInCard submittedCountMeInCard) {
         submittedCountMeInCards.add(submittedCountMeInCard);
-    }
-
-
-    public void syncDataWithServer(HBCConnectServer server) {
-        if(server == null)
-            return;
-
-        server.sendObject("request.livestreams");
-
-        Object rawMessage = server.waitForMessage(5000);
-        if(rawMessage != null){
-            String message = (String) rawMessage;
-            Log.d("Livestream Data", "Message: " + message);
-
-            String[] livestreamDataPieces = message.split("\\|");
-
-            for(String livestreamDataPiece : livestreamDataPieces){
-                Log.d("Livestream Data", "LivestreamDataPiece: " + livestreamDataPiece);
-
-                LivestreamData data = LivestreamData.getLivestreamDataFromMessage(livestreamDataPiece);
-                if(!this.previousLiveStreams.contains(data))
-                    this.previousLiveStreams.add(data);
-            }
-        }
     }
 
 

@@ -1,10 +1,12 @@
 package com.fishtankapps.hbcconnect.activity;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+@SuppressLint("MissingFirebaseInstanceTokenRefresh")
 public class FirebaseThingy extends FirebaseMessagingService {
 
     @Override
