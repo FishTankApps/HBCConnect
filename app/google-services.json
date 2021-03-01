@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "68363044074",
+    "project_id": "hbc-connect",
+    "storage_bucket": "hbc-connect.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:68363044074:android:7e31111395f6b56f924393",
+        "android_client_info": {
+          "package_name": "com.fishtankapps.hbcconnect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "68363044074-gcof08r4smruh4q7a98bf76pf5usf1oj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDC4_PBtQHr89b416eQYKsEW1Cu_YmhxPQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "68363044074-gcof08r4smruh4q7a98bf76pf5usf1oj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

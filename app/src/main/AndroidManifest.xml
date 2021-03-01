@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.fishtankapps.hbcconnect">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/hbc_logo"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/hbc_logo"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.HBCConnect">
+
+        <activity
+            android:name=".activity.HBCConnectActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.HBCConnect.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.WatchFacebookVideoActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.HBCConnect.NoActionBar"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="sensor">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.APP_BROWSER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.SubmitCountMeInCardActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.HBCConnect.NoActionBar"
+            android:parentActivityName=".activity.HBCConnectActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.HBCConnectActivity" />
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.APP_EMAIL" />
+            </intent-filter>
+        </activity>
+
+        <!-- Check For Notification -->
+        <receiver
+            android:name=".utilities.notification.ServerNotificationPinger"
+            android:label="@string/app_name">
+        </receiver>
+
+        <!-- Notification Clicked -->
+        <receiver
+            android:name=".utilities.notification.NotificationClickedReceiver"
+            android:label="@string/app_name">
+        </receiver>
+
+        <!-- FIRE BASE THING -->
+        <service
+            android:name=".activity.FirebaseThingy"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="com.google.firebase.messaging.default_notification_icon"
+                android:resource="@mipmap/hbc_logo" />
+        </service>
+    </application>
+
+</manifest>

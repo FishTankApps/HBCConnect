@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.fishtankapps.hbcconnect.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/home_screen_layout" />
+
+    <fragment
+        android:id="@+id/nav_count_me_in"
+        android:name="com.fishtankapps.hbcconnect.ui.countMeIn.CountMeInFragment"
+        android:label="@string/count_me_in"
+        tools:layout="@layout/count_me_in_screen_layout" />
+
+    <fragment
+        android:id="@+id/nav_slideshow"
+        android:name="com.fishtankapps.hbcconnect.ui.livestream.LiveStreamSelector"
+        android:label="@string/live_streams"
+        tools:layout="@layout/livestream_selector_layout" />
+</navigation>
