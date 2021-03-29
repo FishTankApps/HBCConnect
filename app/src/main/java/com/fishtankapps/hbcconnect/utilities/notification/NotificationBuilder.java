@@ -12,17 +12,23 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.fishtankapps.hbcconnect.R;
 import com.fishtankapps.hbcconnect.activity.HBCConnectActivity;
+import com.fishtankapps.hbcconnect.dataStorage.DataFile;
 import com.fishtankapps.hbcconnect.utilities.Constants;
+
+import java.io.Serializable;
+import java.util.ArrayList;
 
 public class NotificationBuilder {
 
     private static int currentNotificationID = 0;
-    private static int counter = 0;
 
     private String notificationTypeDescription;
     private String notificationType;
     private final String message;
     private final String title;
+
+    private final ArrayList<String> extrasKeys;
+    private final ArrayList<Serializable> extrasObjects;
 
     private int importance;
 
@@ -38,6 +44,9 @@ public class NotificationBuilder {
 
         onClickActivity = HBCConnectActivity.class;
         notificationClickedHandler = null;
+
+        extrasKeys = new ArrayList<>();
+        extrasObjects = new ArrayList<>();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             importance = NotificationManager.IMPORTANCE_DEFAULT;
@@ -64,10 +73,22 @@ public class NotificationBuilder {
         return this;
     }
 
+    public NotificationBuilder addExtraForOnClickActivity(String key, Serializable object){
+        extrasKeys.add(key);
+        extrasObjects.add(object);
+
+        return this;
+    }
+
     public void sendNotification(Context context) {
         Intent intent = new Intent(context, onClickActivity);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, counter++, intent, 0);
+
+        for(int index = 0; index < extrasKeys.size(); index++){
+            intent.putExtra(extrasKeys.get(index), extrasObjects.get(index));
+        }
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, DataFile.getSharedPreferenceIntValue(Constants.NOTIFICATION_REQUEST_CODE, context), intent, 0);
 
         int notificationID = currentNotificationID++;
 
@@ -84,7 +105,7 @@ public class NotificationBuilder {
 
             Intent onPressIntent = new Intent(context, NotificationClickedReceiver.class);
             onPressIntent.putExtra(Constants.NOTIFICATION_CLICKED_HANDLER, notificationClickedHandler);
-            PendingIntent onPressPendingIntent = PendingIntent.getBroadcast(context, counter++, onPressIntent, 0);
+            PendingIntent onPressPendingIntent = PendingIntent.getBroadcast(context, DataFile.getSharedPreferenceIntValue(Constants.NOTIFICATION_REQUEST_CODE, context), onPressIntent, 0);
 
             builder.addAction(R.mipmap.hbc_logo, notificationClickedHandler.getButtonText(), onPressPendingIntent);
         }
@@ -100,6 +121,9 @@ public class NotificationBuilder {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
         notificationManager.notify(notificationID, builder.build());
+
+        DataFile.setSharedPreferenceIntValue(Constants.NOTIFICATION_REQUEST_CODE,
+                DataFile.getSharedPreferenceIntValue(Constants.NOTIFICATION_REQUEST_CODE, context) + 2, context);
     }
 
     public static NotificationBuilder buildNotification(String title, String message){

@@ -9,12 +9,12 @@
             android:icon="@drawable/ic_home_screen"
             android:title="@string/menu_home" />
         <item
-            android:id="@+id/nav_count_me_in"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/count_me_in" />
+            android:id="@+id/nav_virtual_card"
+            android:icon="@drawable/ic_menu_virtual_cards"
+            android:title="@string/virtual_card" />
         <item
             android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_menu_livestreams"
             android:title="@string/live_streams" />
     </group>
 </menu>

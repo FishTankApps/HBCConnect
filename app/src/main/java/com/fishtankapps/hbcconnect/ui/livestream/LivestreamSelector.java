@@ -25,10 +25,13 @@ import com.fishtankapps.hbcconnect.activity.WatchFacebookVideoActivity;
 import com.fishtankapps.hbcconnect.dataStorage.LivestreamData;
 import com.fishtankapps.hbcconnect.utilities.Constants;
 import com.fishtankapps.hbcconnect.utilities.Utilities;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class LiveStreamSelector extends Fragment {
+public class LivestreamSelector extends Fragment {
 
     public static final String LIVE_VIDEO_ID = "LIVE";
 
@@ -44,10 +47,19 @@ public class LiveStreamSelector extends Fragment {
 
         Button watchLiveLivestream = root.findViewById(R.id.watchLiveLivestream);
         watchLiveLivestream.setOnClickListener(l -> {
-            Intent watchVideoIntent = new Intent(HBCConnectActivity.hbcConnectActivity, WatchFacebookVideoActivity.class);
-            watchVideoIntent.putExtra(Constants.LIVESTREAM_ID, LIVE_VIDEO_ID);
-            startActivity(watchVideoIntent);
-        });
+                if(Utilities.isInternetUnavailable()){
+                    Toast.makeText(root.getContext(), "You need an Internet connection to watch livestreams. Sorry. :-(", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                HBCConnectActivity.databaseInterface.getValue("livestreams/live_livestream", (value) -> {
+                    Intent watchVideoIntent = new Intent(HBCConnectActivity.hbcConnectActivity, WatchFacebookVideoActivity.class);
+                    watchVideoIntent.putExtra(Constants.LIVESTREAM_ID, value.toString());
+                    watchVideoIntent.putExtra(Constants.LIVESTREAM_NAME, "Live Livestream");
+
+                    startActivity(watchVideoIntent);
+                });
+            });
 
         root.findViewById(R.id.spacer) .setBackgroundColor(Utilities.getColor(root.getContext(), R.attr.colorSecondary));
         root.findViewById(R.id.spacer2).setBackgroundColor(Utilities.getColor(root.getContext(), R.attr.colorSecondary));
@@ -61,41 +73,56 @@ public class LiveStreamSelector extends Fragment {
             }
 
             public boolean onQueryTextChange(String s) {
-                refreshLiveStreamVideos();
+                refreshLivestreamButtons();
                 return false;
             }
         });
 
         setUpSpinner(root);
         setUpSwipeToRefresh(root);
-        refreshLiveStreamVideos();
+
+        HBCConnectActivity.databaseInterface.addValueEventListener("livestreams/livestream_list",
+                new ValueEventListener() {
+                    boolean firstTime = true;
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(firstTime) {
+                            firstTime = false;
+                            return;
+                        }
+
+                        Toast.makeText(root.getContext(), "Livestream list just updated! New video/fix just happened!", Toast.LENGTH_SHORT).show();
+                        refreshLivestreams();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+            });
+
+        refreshLivestreamButtons();
 
         return root;
     }
 
-    private volatile boolean notRefreshedYet = false;
     private void setUpSwipeToRefresh(View root){
         SwipeRefreshLayout swipeRefreshLayout = root.findViewById(R.id.livestreamSwipeRefresh);
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
 
-            if(HBCConnectActivity.hbcConnectServer ==  null || !HBCConnectActivity.hbcConnectServer.isConnected()){
-                Toast.makeText(HBCConnectActivity.hbcConnectActivity, "No Connection to Server", Toast.LENGTH_SHORT).show();
+            if(Utilities.isInternetUnavailable()){
+                Toast.makeText(HBCConnectActivity.hbcConnectActivity, "No Internet Connection", Toast.LENGTH_SHORT).show();
                 swipeRefreshLayout.setRefreshing(false);
                 return;
             }
 
-            notRefreshedYet = true;
-            new Thread(() -> {
-                HBCConnectActivity.dataFile.syncDataWithServer(HBCConnectActivity.hbcConnectServer);
-                notRefreshedYet = false;
-            }).start();
-
-            while (notRefreshedYet)
-                try{Thread.sleep(100);}catch(Exception ignored){}
-
-            Log.d("LiveStreamSelector", "setUpSwipeToRefresh: Done Refreshing!");
-            swipeRefreshLayout.setRefreshing(false);
+            Log.d("LiveStreamSelector", "setUpSwipeToRefresh: Started Refreshing...");
+            HBCConnectActivity.dataFile.syncWithDatabase(()->{
+                    swipeRefreshLayout.setRefreshing(false);
+                    refreshLivestreamButtons();
+                    Log.d("LiveStreamSelector", "setUpSwipeToRefresh: Done Refreshing!");
+                });
         });
     }
 
@@ -116,11 +143,11 @@ public class LiveStreamSelector extends Fragment {
         livestreamTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                refreshLiveStreamVideos();
+                refreshLivestreamButtons();
             }
 
             public void onNothingSelected(AdapterView<?> adapterView) {
-                refreshLiveStreamVideos();
+                refreshLivestreamButtons();
             }
         });
     }
@@ -138,7 +165,7 @@ public class LiveStreamSelector extends Fragment {
     }
 
     @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
-    private void refreshLiveStreamVideos(){
+    private void refreshLivestreamButtons(){
 
         while(livestreamButtonLayout.getChildCount() > 0)
             livestreamButtonLayout.removeViewAt(0);
@@ -174,18 +201,31 @@ public class LiveStreamSelector extends Fragment {
             livestreamButton.setBackgroundColor(color);
 
             livestreamButton.setOnClickListener((button) -> {
-                if(!Utilities.isInternetAvailable()){
+                if(Utilities.isInternetUnavailable()){
                     Toast.makeText(HBCConnectActivity.hbcConnectActivity, "You need an Internet connection to watch livestreams. Sorry. :-(", Toast.LENGTH_LONG).show();
                     return;
                 }
 
                 Intent watchVideoIntent = new Intent(HBCConnectActivity.hbcConnectActivity, WatchFacebookVideoActivity.class);
                 watchVideoIntent.putExtra(Constants.LIVESTREAM_ID, livestreamData.getLivestreamID());
+                watchVideoIntent.putExtra(Constants.LIVESTREAM_NAME, livestreamData.getLivestreamName());
                 startActivity(watchVideoIntent);
             });
 
             livestreamButtonLayout.addView(livestreamButton);
         }
     }
-    
+
+    public void refreshLivestreams(){
+        if(Utilities.isInternetUnavailable()){
+            Toast.makeText(HBCConnectActivity.hbcConnectActivity, "No Internet Connection", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Log.d("LiveStreamSelector", "setUpSwipeToRefresh: Started Refreshing...");
+        HBCConnectActivity.dataFile.syncWithDatabase(()->{
+            refreshLivestreamButtons();
+            Log.d("LiveStreamSelector", "setUpSwipeToRefresh: Done Refreshing!");
+        });
+    }
 }

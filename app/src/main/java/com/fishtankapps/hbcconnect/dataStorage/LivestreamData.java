@@ -47,12 +47,4 @@ public class LivestreamData implements Serializable {
 				Objects.equals(livestreamClassification, that.livestreamClassification) &&
 				Objects.equals(livestreamID, that.livestreamID);
 	}
-
-	public static LivestreamData getLivestreamDataFromMessage(String message){
-		String[] split = message.split(";");
-
-		return new LivestreamData(split[0], split[1], split[2]);
-
-	}
-
 }

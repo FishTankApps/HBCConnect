@@ -7,9 +7,6 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.webkit.ConsoleMessage;
-import android.webkit.JavascriptInterface;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -19,14 +16,9 @@ import com.fishtankapps.hbcconnect.R;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 
 import static com.fishtankapps.hbcconnect.utilities.Constants.LIVESTREAM_VIDEO_RATIO;
-
-/**
- * Created by zeta on 9/13/16.
- */
 
 public class FacebookPlayer extends WebView {
 
@@ -41,7 +33,7 @@ public class FacebookPlayer extends WebView {
     @SuppressLint("SetJavaScriptEnabled")
     public void initialize(String videoUrl){
 
-        if(!videoUrl.equals(LiveStreamSelector.LIVE_VIDEO_ID))
+        if(!videoUrl.equals(LivestreamSelector.LIVE_VIDEO_ID))
             videoUrl = "http://www.facebook.com/photo.php?v=" + videoUrl;
 
         WebSettings set = this.getSettings();
@@ -50,8 +42,6 @@ public class FacebookPlayer extends WebView {
         set.setLoadWithOverviewMode(true);
         set.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
         set.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        set.setPluginState(WebSettings.PluginState.ON);
-        set.setPluginState(WebSettings.PluginState.ON_DEMAND);
         set.setAllowContentAccess(true);
         set.setAllowFileAccess(true);
         set.setUserAgentString("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36 Edge/12.0");
@@ -59,7 +49,7 @@ public class FacebookPlayer extends WebView {
         this.setLayerType(View.LAYER_TYPE_NONE, null);
         this.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
 
-        if(!videoUrl.equals(LiveStreamSelector.LIVE_VIDEO_ID))
+        if(!videoUrl.equals(LivestreamSelector.LIVE_VIDEO_ID))
             this.loadDataWithBaseURL("http://facebook.com", getVideoHTML(videoUrl), "text/html", "utf-8", null);
         else
             loadData(getLivestreamHTML(), "text/html", "UTF-8");
@@ -93,7 +83,7 @@ public class FacebookPlayer extends WebView {
                         .replace("{auto_play}", "false")
                         .replace("{show_text}", "false")
                         .replace("{show_captions}", "false");
-                Log.d("FBVPLAYER", html);
+                Log.v("FBVPLAYER", html);
                 return html;
             }
         } catch (Exception e){

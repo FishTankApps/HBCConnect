@@ -1,11 +1,11 @@
 package com.fishtankapps.hbcconnect.utilities.email;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.fishtankapps.hbcconnect.activity.SubmitCountMeInCardActivity;
 import com.fishtankapps.hbcconnect.utilities.Constants;
 
 import java.util.Properties;
@@ -21,12 +21,12 @@ import javax.mail.internet.MimeMessage;
 public class SendMail extends AsyncTask<Object, Object, Object> {
 
    @SuppressLint("StaticFieldLeak")
-   private final SubmitCountMeInCardActivity activity;
+   private final Activity activity;
    private final String subject;
    private final String message;
    private ProgressDialog progressDialog;
 
-   public SendMail(SubmitCountMeInCardActivity activity, String subject, String message){
+   public SendMail(Activity activity, String subject, String message){
       super();
       this.activity = activity;
       this.subject = subject;

@@ -8,39 +8,34 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.fishtankapps.hbcconnect.R;
-import com.fishtankapps.hbcconnect.dataStorage.SubmittedCountMeInCard;
+import com.fishtankapps.hbcconnect.dataStorage.SubmittedPrayerRequestCard;
 import com.fishtankapps.hbcconnect.utilities.email.SendMail;
 
 import java.util.Objects;
 
-public class SubmitCountMeInCardActivity extends AppCompatActivity {
+public class SubmitPrayerRequestActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.submit_count_me_in_screen_layout);
+        setContentView(R.layout.submit_prayer_request_screen_layout);
 
-        findViewById(R.id.submitCountMeIn).setOnClickListener(l->submitCountMeIn());
+        findViewById(R.id.submitPrayerRequest).setOnClickListener(l->submitCountMeIn());
 
         try {
-            setSupportActionBar(findViewById(R.id.countMeInToolbar));
-            Objects.requireNonNull(getSupportActionBar()).setTitle("Count Me In");
+            setSupportActionBar(findViewById(R.id.prayerRequestToolbar));
+            Objects.requireNonNull(getSupportActionBar()).setTitle("Prayer Request");
             Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
             Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
 
         } catch (Exception e){
-            Log.w("Count Me In", "Error setting up SupportActionBar.");
+            Log.w("Prayer Request", "Error setting up SupportActionBar.");
         }
-
-
     }
 
     private void submitCountMeIn(){
-        SubmittedCountMeInCard submittedCountMeInCard = new SubmittedCountMeInCard(((EditText) findViewById(R.id.activityNameEditText)).getText().toString(),
-                ((EditText) findViewById(R.id.nameEditText)).getText().toString(),
+        SubmittedPrayerRequestCard submittedCountMeInCard = new SubmittedPrayerRequestCard(((EditText) findViewById(R.id.nameEditText)).getText().toString(),
                 ((EditText) findViewById(R.id.phoneEditText)).getText().toString(),
-                ((EditText) findViewById(R.id.numberOfAdultsEditText)).getText().toString(),
-                ((EditText) findViewById(R.id.numberOfChildrenEditText)).getText().toString(),
                 ((EditText) findViewById(R.id.prayerRequestEditText)).getText().toString());
 
         if(submittedCountMeInCard.isInputValid()){

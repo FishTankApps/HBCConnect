@@ -5,7 +5,6 @@
     <string name="church_name">Hillcrest Baptist Church</string>
     <string name="church_address">820 Central Ave. Carlisle, OH 45005</string>
     <string name="church_phone">(937) 746–4248</string>
-    <string name="church_email">820 Central Ave. Carlisle, OH 45005</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
@@ -15,4 +14,5 @@
     <string name="live_streams">Live Streams</string>
     <string name="count_me_in">Count Me In</string>
     <string name="fancy_logo_for_hbc">Fancy Logo for HBC</string>
+    <string name="virtual_card">Virtual Cards</string>
 </resources>

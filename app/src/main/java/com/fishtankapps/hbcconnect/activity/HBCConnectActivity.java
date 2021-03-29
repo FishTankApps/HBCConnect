@@ -1,16 +1,10 @@
 package com.fishtankapps.hbcconnect.activity;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -21,14 +15,8 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.fishtankapps.hbcconnect.R;
 import com.fishtankapps.hbcconnect.dataStorage.DataFile;
-import com.fishtankapps.hbcconnect.server.HBCConnectServer;
-import com.fishtankapps.hbcconnect.utilities.Constants;
-import com.fishtankapps.hbcconnect.utilities.Utilities;
-import com.fishtankapps.hbcconnect.utilities.notification.ServerNotificationPinger;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.fishtankapps.hbcconnect.utilities.firebase.FirebaseDatabaseInterface;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 public class HBCConnectActivity extends AppCompatActivity {
@@ -38,7 +26,7 @@ public class HBCConnectActivity extends AppCompatActivity {
     public static DataFile dataFile;
     public static HBCConnectActivity hbcConnectActivity;
 
-    public static HBCConnectServer hbcConnectServer = null;
+    public static FirebaseDatabaseInterface databaseInterface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +36,11 @@ public class HBCConnectActivity extends AppCompatActivity {
 
         hbcConnectActivity = this;
 
+        initNavigation();
+        initFirebase();
+    }
+
+    public void initNavigation(){
         setContentView(R.layout.drawer_layout);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -59,7 +52,7 @@ public class HBCConnectActivity extends AppCompatActivity {
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_count_me_in, R.id.nav_slideshow)
+        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_virtual_card, R.id.nav_slideshow)
                 .setOpenableLayout(drawer)
                 .build();
 
@@ -68,18 +61,37 @@ public class HBCConnectActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
     }
 
-    @Override
-    public void onStop(){
-        super.onStop();
-        DataFile.saveDataFile(dataFile, this);
+    private void initFirebase(){
+        FirebaseMessaging.getInstance().subscribeToTopic("debug").addOnCompleteListener(task ->
+                Log.i("HBC Connect", "Subscription to topic \"debug\" successful: " + task.isSuccessful()));
+
+        FirebaseMessaging.getInstance().subscribeToTopic("live.livestream").addOnCompleteListener(task ->
+                Log.i("HBC Connect", "Subscription to topic \"live.livestream\" successful: " + task.isSuccessful()));
+
+        databaseInterface = new FirebaseDatabaseInterface();
+
+        dataFile.syncWithDatabase(null);
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onPause(){
+        super.onPause();
 
-        if(hbcConnectServer != null && hbcConnectServer.isConnected())
-            hbcConnectServer.disconnect();
+        DataFile.saveDataFile(dataFile, this);
+        databaseInterface.goOffline();
+    }
+
+    public void onResume(){
+        super.onResume();
+        databaseInterface.goOnline();
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+
+        DataFile.saveDataFile(dataFile, this);
+        databaseInterface.goOffline();
     }
 
     @Override
@@ -95,13 +107,9 @@ public class HBCConnectActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
+
     private boolean onThreeButtonsMenuItemClicked(MenuItem menuItem){
 
-
         return true;
-    }
-
-    private void readInitialServerData(){
-        dataFile.syncDataWithServer(hbcConnectServer);
     }
 }

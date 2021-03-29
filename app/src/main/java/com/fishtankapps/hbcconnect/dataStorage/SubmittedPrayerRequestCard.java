@@ -12,29 +12,24 @@ import com.fishtankapps.hbcconnect.ui.virtualCard.VirtualCardFragment;
 
 import java.io.Serializable;
 
-public class SubmittedCountMeInCard implements Serializable {
+public class SubmittedPrayerRequestCard implements Serializable {
 
     private static final long serialVersionUID = -1930328475766475470L;
-    private final String activity, name, phone, adults, children, comments;
+    private final String name, phone, prayerRequest;
 
-    public SubmittedCountMeInCard(String activity, String name, String phone, String adults, String children, String comments) {
-        this.activity = activity;
+    public SubmittedPrayerRequestCard(String name, String phone, String prayerRequest) {
         this.name = name;
         this.phone = phone;
-        this.adults = adults;
-        this.children = children;
-        this.comments = (comments.isEmpty()) ? "(none)" : comments;
+        this.prayerRequest = prayerRequest;
     }
 
     public boolean isInputValid() {
-        return !activity.isEmpty() && !name.isEmpty() && !phone.isEmpty() && !adults.isEmpty() && !children.isEmpty();
+        return !name.isEmpty() && !phone.isEmpty() && !prayerRequest.isEmpty();
     }
 
     public String getHTMLEmail(){
-        StringBuilder message = new StringBuilder("<div dir=3D\"ltr\"><font size=3D\"4\"><b>New Virtual Count Me In Card:</b></fon" +
+        StringBuilder message = new StringBuilder("<div dir=3D\"ltr\"><font size=3D\"4\"><b>New Virtual Prayer Request Card:</b></fon" +
                 "t><div><font size=3D\"4\"><b><br></b></font><div><b>Name of Activity: </b>");
-
-        message.append(activity);
 
         message.append("</div><div><b>Name:</b> ");
         message.append(name);
@@ -42,15 +37,9 @@ public class SubmittedCountMeInCard implements Serializable {
         message.append("</div><div><b>Phone:</b> ");
         message.append(phone);
 
-        message.append("</div><div><br></div><div><b>Number of Attending:</b><br><b>Adults: </b>");
-        message.append(adults);
+        message.append("</div><div><br></div><div><b>Prayer Request:</b></div><div>");
 
-        message.append(" <b>Children: </b>");
-        message.append(children);
-
-        message.append("</div><div><br></div><div><b>Comments:</b></div><div>");
-
-        String[] split = comments.split("\n");
+        String[] split = prayerRequest.split("\n");
 
         for(String line : split)
             message.append(line).append("</div><div>");
@@ -59,25 +48,14 @@ public class SubmittedCountMeInCard implements Serializable {
     }
 
     public String getTextViewText(){
-        StringBuilder message = new StringBuilder("<font size=3D\"4\"><b><br></b></font><div><b>Name of Activity: </b>");
-
-        message.append(activity);
+        StringBuilder message = new StringBuilder();
 
         message.append("</div><div><b>Name:</b> ");
         message.append(name);
 
-        message.append("</div><div><b>Phone:</b> ");
-        message.append(phone);
+        message.append("</div><div><br></div><div><b>Prayer Request:</b></div><div>");
 
-        message.append("</div><div><br></div><div><b>Number of Attending:</b><br><b>Adults: </b>");
-        message.append(adults);
-
-        message.append(" <b>Children: </b>");
-        message.append(children);
-
-        message.append("</div><div><br></div><div><b>Comments:</b></div><div>");
-
-        String[] split = comments.split("\n");
+        String[] split = prayerRequest.split("\n");
 
         for(String line : split)
             message.append(line).append("</div><div>");
@@ -108,7 +86,7 @@ public class SubmittedCountMeInCard implements Serializable {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Are you sure you want to remove this submission from your history?");
         builder.setPositiveButton("Yes", (dialog, which) -> {
-            HBCConnectActivity.dataFile.getSubmittedCountMeInCards().remove(this);
+            HBCConnectActivity.dataFile.getSubmittedPrayerRequestCards().remove(this);
             virtualCardFragment.refreshPreviousSubmissions();
         });
         builder.setNegativeButton("No", (dialog, which) -> dialog.cancel());

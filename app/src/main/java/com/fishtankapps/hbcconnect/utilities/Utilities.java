@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.util.Log;
 import android.util.TypedValue;
 
 import java.net.InetAddress;
@@ -36,7 +35,7 @@ public final class Utilities {
     }
 
     private static int isInternetAvailable = 0;
-    public static synchronized boolean isInternetAvailable() {
+    public static synchronized boolean isInternetUnavailable() {
         new Thread(()->{
             isInternetAvailable = 0;
             try {
@@ -51,6 +50,6 @@ public final class Utilities {
         while(isInternetAvailable == 0)
             try{Thread.sleep(100);}catch (Exception ignore){}
 
-        return isInternetAvailable == 1;
+        return isInternetAvailable != 1;
     }
 }
