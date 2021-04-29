@@ -1,5 +1,6 @@
 package com.fishtankapps.hbcconnect.utilities.firebase;
 
+import android.os.Bundle;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
@@ -37,6 +38,21 @@ public class FirebaseDatabaseInterface {
 			});
 	}
 
+	public void getValue(String key, BundledOnValueRetrievedListener listener, Object[] bundle) {
+		database.getReference(key).addListenerForSingleValueEvent(new ValueEventListener() {
+			@Override
+			public void onDataChange(@NotNull DataSnapshot snapshot) {
+				Log.v("DatabaseInterface", "getValue(): DataChanged");
+				listener.valueRetrieved(snapshot.getValue(), bundle);
+			}
+
+			public void onCancelled(@NotNull DatabaseError arg0) {
+				Log.e("DatabaseInterface", "getValue(): Canceled: " + arg0.toException());
+				listener.valueRetrieved(null, bundle);
+			}
+		});
+	}
+
 	/*
 	public void setValue(String key, Object value) {
 		database.getReference(key).setValue(value);
@@ -53,5 +69,9 @@ public class FirebaseDatabaseInterface {
 
 	public interface OnValueRetrievedListener {
 		void valueRetrieved(Object value);
+	}
+
+	public interface BundledOnValueRetrievedListener {
+		void valueRetrieved(Object value, Object[] bundle);
 	}
 }

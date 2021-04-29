@@ -5,6 +5,16 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
+
+    <color name="plumb_darker">#552B38</color>
+    <color name="plumb">#FF703447</color>
+    <color name="plumb_lighter">#9A5E71</color>
+
+    <color name="tan_darker_darker">#333123</color>
+    <color name="tan_darker">#6C684F</color>
+    <color name="tan">#A5A080</color>
+    <color name="tan_lighter">#DCD8C2</color>
+
     <color name="black">#FF000000</color>
     <color name="livestream_viewer_background">#FF202020</color>
     <color name="white">#FFFFFFFF</color>

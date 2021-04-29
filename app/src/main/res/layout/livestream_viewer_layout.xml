@@ -27,13 +27,13 @@
         android:background="@color/livestream_viewer_background"
         android:orientation="vertical">
 
-        <com.fishtankapps.hbcconnect.ui.livestream.FacebookPlayer
+        <com.fishtankapps.hbcconnect.ui.livestream.FacebookLivestreamViewer
             android:id="@+id/facebookVideoPlayer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal">
 
-        </com.fishtankapps.hbcconnect.ui.livestream.FacebookPlayer>
+        </com.fishtankapps.hbcconnect.ui.livestream.FacebookLivestreamViewer>
     </LinearLayout>
 
     <TextView

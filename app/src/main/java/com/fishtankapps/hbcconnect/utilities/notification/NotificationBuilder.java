@@ -93,7 +93,7 @@ public class NotificationBuilder {
         int notificationID = currentNotificationID++;
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "HBC_Connect_Notification")
-                .setSmallIcon(R.mipmap.hbc_logo)
+                .setSmallIcon(R.mipmap.hbc_logo_plumb)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setContentIntent(pendingIntent)
@@ -107,7 +107,7 @@ public class NotificationBuilder {
             onPressIntent.putExtra(Constants.NOTIFICATION_CLICKED_HANDLER, notificationClickedHandler);
             PendingIntent onPressPendingIntent = PendingIntent.getBroadcast(context, DataFile.getSharedPreferenceIntValue(Constants.NOTIFICATION_REQUEST_CODE, context), onPressIntent, 0);
 
-            builder.addAction(R.mipmap.hbc_logo, notificationClickedHandler.getButtonText(), onPressPendingIntent);
+            builder.addAction(R.mipmap.hbc_logo_plumb, notificationClickedHandler.getButtonText(), onPressPendingIntent);
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.fishtankapps.hbcconnect.R;
-import com.fishtankapps.hbcconnect.ui.livestream.FacebookPlayer;
+import com.fishtankapps.hbcconnect.ui.livestream.FacebookLivestreamViewer;
 import com.fishtankapps.hbcconnect.utilities.Constants;
 
 import org.jetbrains.annotations.NotNull;
@@ -19,13 +19,13 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Objects;
 
-public class WatchFacebookVideoActivity extends AppCompatActivity {
+public class LivestreamViewerActivity extends AppCompatActivity {
+
+    private static final boolean WAIT_FOR_VIDEO_TO_LOAD = false;
 
     private LinearLayout videoPlayerLinearLayout;
-    private FacebookPlayer player;
+    private FacebookLivestreamViewer player;
     private Toolbar toolbar;
-
-
 
     private Thread logReaderThread;
 
@@ -35,7 +35,7 @@ public class WatchFacebookVideoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.facebook_video_veiwer_layout);
+        setContentView(R.layout.livestream_viewer_layout);
 
         String livestreamID = getIntent().getStringExtra(Constants.LIVESTREAM_ID);
 
@@ -61,45 +61,49 @@ public class WatchFacebookVideoActivity extends AppCompatActivity {
 
         enterFullScreenMode();
 
-        logReaderThread = new Thread(() -> {
-            Process process = null;
-            try {
-                Runtime.getRuntime().exec("logcat -b all -c").waitFor();
+        if(WAIT_FOR_VIDEO_TO_LOAD){
+            logReaderThread = new Thread(() -> {
+                Process process = null;
+                try {
+                    Runtime.getRuntime().exec("logcat -b all -c").waitFor();
 
-                String[] command = new String[] { "logcat", "-v", "threadtime" };
+                    String[] command = new String[] { "logcat", "-v", "threadtime" };
 
-                process = Runtime.getRuntime().exec(command);
+                    process = Runtime.getRuntime().exec(command);
 
-                BufferedReader bufferedReader =
-                        new BufferedReader(new InputStreamReader(process.getInputStream()));
+                    BufferedReader bufferedReader =
+                            new BufferedReader(new InputStreamReader(process.getInputStream()));
 
-                String line;
-                long startTime = System.currentTimeMillis();
-                while ((line = bufferedReader.readLine()) != null){
-                    if(line.contains("OMX"))
-                        break;
+                    String line;
+                    long startTime = System.currentTimeMillis();
+                    while ((line = bufferedReader.readLine()) != null){
+                        if(line.contains("OMX"))
+                            break;
 
-                    if(System.currentTimeMillis() - startTime > 15_000)
-                        break;
-                    Thread.sleep(50);
+                        if(System.currentTimeMillis() - startTime > 15_000)
+                            break;
+                        Thread.sleep(50);
+                    }
+
+                    process.destroy();
+                } catch (InterruptedException ie) {
+                    Log.i("LogLooker", "Thread killed!");
+                } catch (Exception ex){
+                    Log.e("LogLooker", "start failed", ex);
                 }
 
-                process.destroy();
-            } catch (InterruptedException ie) {
-                Log.i("LogLooker", "Thread killed!");
-            } catch (Exception ex){
-                Log.e("LogLooker", "start failed", ex);
-            }
+                if(process != null)
+                    process.destroy();
 
-            if(process != null)
-                process.destroy();
+                Log.d("LogLooker", "Livestream Done Loading!");
+                this.runOnUiThread(this::onLivestreamDoneLoading);
+                videoLoaded = true;
+            });
 
-            Log.d("LogLooker", "Livestream Done Loading!");
-            this.runOnUiThread(this::onLivestreamDoneLoading);
-            videoLoaded = true;
-        });
+            logReaderThread.start();
+        } else
+            onLivestreamDoneLoading();
 
-        logReaderThread.start();
     }
 
     private void onLivestreamDoneLoading(){
@@ -116,10 +120,12 @@ public class WatchFacebookVideoActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(logReaderThread.isAlive())
+        if(logReaderThread != null && logReaderThread.isAlive())
             logReaderThread.interrupt();
 
-        finish();
+        exitFullScreenMode();
+        super.onBackPressed();
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     @Override
@@ -128,13 +134,20 @@ public class WatchFacebookVideoActivity extends AppCompatActivity {
 
         displayInLandscape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE;
 
-        if(videoLoaded)
+        if(videoLoaded || !WAIT_FOR_VIDEO_TO_LOAD)
             player.setAutoPlayerHeight(this, displayInLandscape);
 
         if(displayInLandscape)
             ((LinearLayout) findViewById(R.id.livestreamVeiwerLayout)).removeView(toolbar);
         else
             ((LinearLayout) findViewById(R.id.livestreamVeiwerLayout)).addView(toolbar, 0);
+    }
+
+    private void exitFullScreenMode() {
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 
     public void enterFullScreenMode(){

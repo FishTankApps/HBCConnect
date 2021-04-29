@@ -21,7 +21,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.fishtankapps.hbcconnect.R;
 import com.fishtankapps.hbcconnect.activity.HBCConnectActivity;
-import com.fishtankapps.hbcconnect.activity.WatchFacebookVideoActivity;
+import com.fishtankapps.hbcconnect.activity.LivestreamViewerActivity;
+import com.fishtankapps.hbcconnect.dataStorage.DataFile;
 import com.fishtankapps.hbcconnect.dataStorage.LivestreamData;
 import com.fishtankapps.hbcconnect.utilities.Constants;
 import com.fishtankapps.hbcconnect.utilities.Utilities;
@@ -53,11 +54,13 @@ public class LivestreamSelector extends Fragment {
                 }
 
                 HBCConnectActivity.databaseInterface.getValue("livestreams/live_livestream", (value) -> {
-                    Intent watchVideoIntent = new Intent(HBCConnectActivity.hbcConnectActivity, WatchFacebookVideoActivity.class);
+
+
+                    Intent watchVideoIntent = new Intent(HBCConnectActivity.hbcConnectActivity, LivestreamViewerActivity.class);
                     watchVideoIntent.putExtra(Constants.LIVESTREAM_ID, value.toString());
                     watchVideoIntent.putExtra(Constants.LIVESTREAM_NAME, "Live Livestream");
-
                     startActivity(watchVideoIntent);
+                    HBCConnectActivity.hbcConnectActivity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 });
             });
 
@@ -101,6 +104,26 @@ public class LivestreamSelector extends Fragment {
                     }
             });
 
+        HBCConnectActivity.databaseInterface.addValueEventListener("livestreams/live_livestream",
+                new ValueEventListener() {
+                    boolean firstTime = true;
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(firstTime) {
+                            firstTime = false;
+                            return;
+                        }
+
+                        Toast.makeText(root.getContext(), "Live Livestream just updated! New video/fix just happened!", Toast.LENGTH_SHORT).show();
+                        refreshLivestreams();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
         refreshLivestreamButtons();
 
         return root;
@@ -118,11 +141,14 @@ public class LivestreamSelector extends Fragment {
             }
 
             Log.d("LiveStreamSelector", "setUpSwipeToRefresh: Started Refreshing...");
-            HBCConnectActivity.dataFile.syncWithDatabase(()->{
+            HBCConnectActivity.dataFile.syncPreviousLivestreams(new DataFile.OnSyncCompleteListener() {
+                public void doneSyncingLivestream() {
                     swipeRefreshLayout.setRefreshing(false);
                     refreshLivestreamButtons();
                     Log.d("LiveStreamSelector", "setUpSwipeToRefresh: Done Refreshing!");
-                });
+                }
+                public void doneSyncingUpcomingEvents() {}
+            });
         });
     }
 
@@ -206,10 +232,11 @@ public class LivestreamSelector extends Fragment {
                     return;
                 }
 
-                Intent watchVideoIntent = new Intent(HBCConnectActivity.hbcConnectActivity, WatchFacebookVideoActivity.class);
+                Intent watchVideoIntent = new Intent(HBCConnectActivity.hbcConnectActivity, LivestreamViewerActivity.class);
                 watchVideoIntent.putExtra(Constants.LIVESTREAM_ID, livestreamData.getLivestreamID());
                 watchVideoIntent.putExtra(Constants.LIVESTREAM_NAME, livestreamData.getLivestreamName());
                 startActivity(watchVideoIntent);
+                HBCConnectActivity.hbcConnectActivity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             });
 
             livestreamButtonLayout.addView(livestreamButton);
@@ -222,10 +249,12 @@ public class LivestreamSelector extends Fragment {
             return;
         }
 
-        Log.d("LiveStreamSelector", "setUpSwipeToRefresh: Started Refreshing...");
-        HBCConnectActivity.dataFile.syncWithDatabase(()->{
-            refreshLivestreamButtons();
-            Log.d("LiveStreamSelector", "setUpSwipeToRefresh: Done Refreshing!");
-        });
+        HBCConnectActivity.dataFile.syncPreviousLivestreams(new DataFile.OnSyncCompleteListener() {
+            public void doneSyncingLivestream() {
+                refreshLivestreamButtons();
+                Log.d("LiveStreamSelector", "setUpSwipeToRefresh: Done Refreshing!");
+            }
+            public void doneSyncingUpcomingEvents() {}
+        });;
     }
 }

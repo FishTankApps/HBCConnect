@@ -20,13 +20,13 @@ import java.nio.charset.StandardCharsets;
 
 import static com.fishtankapps.hbcconnect.utilities.Constants.LIVESTREAM_VIDEO_RATIO;
 
-public class FacebookPlayer extends WebView {
+public class FacebookLivestreamViewer extends WebView {
 
-    public FacebookPlayer(Context context) {
+    public FacebookLivestreamViewer(Context context) {
         super(context);
     }
 
-    public FacebookPlayer(Context context, AttributeSet attrs) {
+    public FacebookLivestreamViewer(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 

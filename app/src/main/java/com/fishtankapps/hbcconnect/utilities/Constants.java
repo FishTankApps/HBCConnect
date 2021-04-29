@@ -18,5 +18,10 @@ public class Constants {
 
     public static final String SHARED_PREFERENCES_KEY = "HBC_Connect";
 
-    public static final String NOTIFICATION_REQUEST_CODE = "NOTIFICATION_REQUEST_CODE";
+    // SharedPreference Keys:
+    public static final String NOTIFICATION_REQUEST_CODE = "notification.request.code";
+    public static final String LIVESTREAM_NOTIFICATION = "livestream.notification";
+    public static final String ALERTS_NOTIFICATION = "alerts.notification";
+
+    public static final String NOT_FIRST_TIME = "not.first.time.opened";
 }

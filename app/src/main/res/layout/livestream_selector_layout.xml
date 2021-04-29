@@ -19,7 +19,7 @@
     <View
         android:id="@+id/spacer2"
         android:layout_width="match_parent"
-        android:layout_height="5dp"
+        android:layout_height="@dimen/divider_height"
         android:background="@color/black" />
 
     <SearchView
@@ -38,7 +38,7 @@
     <View
         android:id="@+id/spacer"
         android:layout_width="match_parent"
-        android:layout_height="5dp"
+        android:layout_height="@dimen/divider_height"
         android:background="@color/black" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

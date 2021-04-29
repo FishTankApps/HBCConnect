@@ -83,6 +83,7 @@ public class VirtualCardFragment extends Fragment {
                 fadeOut.setAnimationListener(new Animation.AnimationListener() {
 
                     public void onAnimationEnd(Animation animation) {
+                        refreshPreviousSubmissions();
 
                         if(position == 0){
                             selectedCardTypeLinearLayout.removeView(submitNewPrayerRequest);
@@ -101,9 +102,7 @@ public class VirtualCardFragment extends Fragment {
                     public void onAnimationStart(Animation animation) {}
                     public void onAnimationRepeat(Animation animation) {}
                 });
-                selectedCardTypeLinearLayout.setAnimation(fadeOut);
-
-                refreshPreviousSubmissions();
+                selectedCardTypeLinearLayout.startAnimation(fadeOut);
             }
 
             @Override
@@ -112,9 +111,6 @@ public class VirtualCardFragment extends Fragment {
             @Override
             public void onTabReselected(TabLayout.Tab tab) {}
         });
-
-
-
 
         refreshPreviousSubmissions();
         return root;

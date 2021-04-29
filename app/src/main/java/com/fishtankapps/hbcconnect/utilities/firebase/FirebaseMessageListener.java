@@ -2,7 +2,7 @@ package com.fishtankapps.hbcconnect.utilities.firebase;
 
 import android.util.Log;
 
-import com.fishtankapps.hbcconnect.activity.WatchFacebookVideoActivity;
+import com.fishtankapps.hbcconnect.activity.LivestreamViewerActivity;
 import com.fishtankapps.hbcconnect.utilities.Constants;
 import com.fishtankapps.hbcconnect.utilities.notification.NotificationBuilder;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -30,7 +30,7 @@ public class FirebaseMessageListener extends FirebaseMessagingService {
             NotificationBuilder.buildNotification("New Livestream", "A new livestream just started! Click to watch!")
                     .setNotificationType("Livestreams")
                     .setNotificationTypeDescription("Receive a notification when a new livestream starts.")
-                    .setOnClickActivity(WatchFacebookVideoActivity.class)
+                    .setOnClickActivity(LivestreamViewerActivity.class)
                     .addExtraForOnClickActivity(Constants.LIVESTREAM_ID, remoteMessage.getData().get("livestream.id"))
                     .addExtraForOnClickActivity(Constants.LIVESTREAM_NAME, "Live Livestream")
                     .sendNotification(this.getBaseContext());
