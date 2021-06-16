@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:layout_margin="10dp"
     android:orientation="vertical"
-    tools:context=".ui.virtualCard.VirtualCardFragment">
+    tools:context=".mobile.pageui.virtualCard.VirtualCardFragment">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/cardTypeSelector"

@@ -21,4 +21,5 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/drawer_top_layout"
         app:menu="@menu/drawer_menu" />
+
 </androidx.drawerlayout.widget.DrawerLayout>

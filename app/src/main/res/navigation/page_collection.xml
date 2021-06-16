@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.fishtankapps.hbcconnect.ui.home.HomeFragment"
+        android:name="com.fishtankapps.hbcconnect.mobile.pageui.home.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/home_screen_layout" />
 
     <fragment
         android:id="@+id/nav_virtual_card"
-        android:name="com.fishtankapps.hbcconnect.ui.virtualCard.VirtualCardFragment"
+        android:name="com.fishtankapps.hbcconnect.mobile.pageui.virtualCard.VirtualCardFragment"
         android:label="@string/virtual_card"
         tools:layout="@layout/virtual_card_screen_layout" />
 
     <fragment
         android:id="@+id/nav_slideshow"
-        android:name="com.fishtankapps.hbcconnect.ui.livestream.LivestreamSelector"
+        android:name="com.fishtankapps.hbcconnect.mobile.pageui.livestream.LivestreamSelector"
         android:label="@string/live_streams"
         tools:layout="@layout/livestream_selector_layout" />
 </navigation>

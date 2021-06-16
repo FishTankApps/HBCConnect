@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/homescreenMainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:onClick="updateUpcomingEventsList"
     android:orientation="vertical"
-    tools:context=".ui.home.HomeFragment">
+    tools:context=".mobile.pageui.home.HomeFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/homeScreenSwipeRefresh"
@@ -17,7 +16,7 @@
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:fillViewport="true">
 
             <LinearLayout
@@ -28,7 +27,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textView15"
+                    android:id="@+id/upcomingEventsTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-thin"
@@ -40,17 +39,30 @@
                     android:id="@+id/homeDividerLine"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/divider_height"
-                    android:layout_marginTop="5dp" />
+                    android:layout_marginTop="5dp"
+                    android:background="?attr/colorSecondaryVariant" />
 
                 <LinearLayout
                     android:id="@+id/upcomingEventsLinearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:orientation="vertical"/>
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:orientation="vertical" />
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-</LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addEventButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:contentDescription="Simple Plus Sign"
+        android:src="@drawable/ic_add_item"
+        android:visibility="invisible"
+        app:fabSize="auto" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="load_more_livestreams_count">10</integer>
+
+    <string name="livestream_video_ratio">1.7777777778</string>
+
+    <string name="fishtankapps_email">fishtankapps@gmail.com</string>
+    <string name="fishtankapps_donotreply_email">fishtankapps.donotreply@gmail.com</string>
+    <string name="fishtankapps_email_password">9F1sh4T@nk4@pps1</string>
+
+    <string name="hbc_admin_email">wjkohls2002@gmail.com</string>
+
+    <string name="shared_preferences_key">HBC_Connect</string>
+
+
+    <!-->     BUNDLE KEYS:    <!-->
+    <string name="feedback_focus">feedback.focus</string>
+    <string name="feedback_template">feedback.template</string>
+
+
+    <!-->     SHARED PREFERENCE KEYS:    <!-->
+    <string name="notification_request_code">notification.request.code</string>
+    <string name="livestream_notification">livestream.notification</string>
+    <string name="alerts_notification">alerts.notification</string>
+    <string name="tag_start">tags.</string>
+    <string name="livestream_id">livestream.id</string>
+    <string name="livestream_name">livestream.name</string>
+    <string name="notification_clicked_handler">notification.clicked.handler</string>
+    <string name="admin_permission">admin.permission</string>
+    <string name="not_first_time_opened">not.first.time.opened</string>
+</resources>

@@ -5,19 +5,20 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
         android:fullBackupContent="@xml/my_backup_rules"
-        android:icon="@mipmap/hbc_logo_plumb"
+        android:icon="@drawable/ic_hbc_connect_icon_square"
+        android:roundIcon="@drawable/ic_hbc_connect_icon_round"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/hbc_logo_plumb"
         android:supportsRtl="true"
         android:theme="@style/Theme.HBCConnect">
 
         <activity
-            android:name=".activity.SplashActivity"
+            android:name=".mobile.activities.SplashActivity"
             android:label="@string/app_name"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -27,7 +28,7 @@
         </activity>
 
         <activity
-            android:name=".activity.HBCConnectActivity"
+            android:name=".mobile.activities.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.HBCConnect.NoActionBar">
             <intent-filter>
@@ -38,74 +39,79 @@
         </activity>
 
         <activity
-            android:name=".activity.LivestreamViewerActivity"
+            android:name=".mobile.activities.LivestreamViewerActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.HBCConnect.NoActionBar"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="sensor">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.APP_BROWSER" />
-            </intent-filter>
         </activity>
 
         <activity
-            android:name=".activity.SubmitCountMeInCardActivity"
+            android:name=".mobile.activities.CreateNewEventActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.HBCConnect.NoActionBar"
-            android:parentActivityName=".activity.HBCConnectActivity">
+            android:parentActivityName=".mobile.activities.MainActivity">
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.HBCConnectActivity" />
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.APP_EMAIL" />
-            </intent-filter>
+                android:value=".mobile.activities.MainActivity" />
         </activity>
 
         <activity
-            android:name=".activity.SubmitPrayerRequestActivity"
+            android:name=".mobile.activities.SubmitCountMeInCardActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.HBCConnect.NoActionBar"
-            android:parentActivityName=".activity.HBCConnectActivity">
+            android:parentActivityName=".mobile.activities.MainActivity">
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.HBCConnectActivity" />
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.APP_EMAIL" />
-            </intent-filter>
+                android:value=".mobile.activities.MainActivity" />
         </activity>
 
         <activity
-            android:name=".activity.SettingsActivity"
+            android:name=".mobile.activities.SubmitPrayerRequestActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.HBCConnect.NoActionBar"
-            android:parentActivityName=".activity.HBCConnectActivity">
+            android:parentActivityName=".mobile.activities.MainActivity">
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.HBCConnectActivity" />
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
+                android:value=".mobile.activities.MainActivity" />
         </activity>
 
-        <!-- Check For Notification -->
+        <activity
+            android:name=".mobile.activities.SubmitFeedbackActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.HBCConnect.NoActionBar"
+            android:parentActivityName=".mobile.activities.MainActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".mobile.activities.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".mobile.activities.SettingsActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.HBCConnect.NoActionBar"
+            android:parentActivityName=".mobile.activities.MainActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".mobile.activities.MainActivity" />
+        </activity>
 
         <!-- Notification Clicked -->
         <receiver
-            android:name=".utilities.notification.NotificationClickedReceiver"
+            android:name=".mobile.utilities.notification.NotificationClickedReceiver"
             android:label="@string/app_name">
         </receiver>
 
         <!-- FIRE BASE THING -->
         <service
-            android:name=".utilities.firebase.FirebaseMessageListener"
+            android:name=".mobile.utilities.firebase.FirebaseMessageListener"
             android:exported="false">
+
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>

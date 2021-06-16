@@ -15,4 +15,7 @@
     <string name="count_me_in">Count Me In</string>
     <string name="fancy_logo_for_hbc">Fancy Logo for HBC</string>
     <string name="virtual_card">Virtual Cards</string>
+    <string name="send_feedback">Send Feedback</string>
+    <string name="already_admin">Already Admin</string>
+    <string name="tags">Tags: </string>
 </resources>

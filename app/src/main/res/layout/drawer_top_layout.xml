@@ -19,7 +19,7 @@
         android:contentDescription="@string/fancy_logo_for_hbc"
         android:padding="0dp"
         android:scaleType="centerInside"
-        app:srcCompat="@mipmap/hbc_logo_plumb" />
+        app:srcCompat="@drawable/ic_hbc_connect_icon_square" />
 
     <TextView
         android:id="@+id/churchName"

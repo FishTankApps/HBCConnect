@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@color/tan" />
+    <item android:drawable="@color/tan_lighter" />
+    <item android:drawable="@drawable/ic_hbc_connect_icon_square"
+        android:gravity="center"/>
 
-    <item>
-        <bitmap
-            android:gravity="fill_horizontal|center_vertical"
-            android:src="@mipmap/hbc_logo_plumb" />
-    </item>
 
 </layer-list>
